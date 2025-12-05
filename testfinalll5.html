@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Village Numérique - Parcours Complet</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body, html {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: "Poppins", Arial, sans-serif;
+    }
+
+    /* ----------------- FRAME 1 : VIDEO BACKGROUND ----------------- */
+    #frame1 {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    #videoBackground {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+    .frame-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+    #frame1::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 0;
+    }
+
+    .content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+
+    #enterBtn {
+        padding: 20px 50px;
+        font-size: 24px;
+        border: 3px solid white;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    #enterBtn:hover {
+        background: white;
+        color: #333;
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+    }
+
+    /* ----------------- FRAME 2 : WELCOME ----------------- */
+    #frame2 {
+        width: 100%;
+        height: 100%;
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #frame2 h1 {
+        color: white;
+        font-size: 48px;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    #continueBtn {
+        padding: 15px 40px;
+        font-size: 20px;
+        border: 3px solid white;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+
+    #continueBtn:hover {
+        background: white;
+        color: #667eea;
+        transform: scale(1.05);
+    }
+
+    /* ----------------- FORMULAIRES (FRAMES 3+) ----------------- */
+    .frame {
+        display: none;
+        position: absolute;
+        height: 100vh;
+        width: 100%;
+       /* background: linear-gradient(135deg, rgba(30, 60, 114, 0.85) 0%, rgba(42, 82, 152, 0.85) 100%);*/
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        padding: 40px;
+        box-sizing: border-box;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .frame.active {
+        display: flex;
+        opacity: 1;
+    }
+
+    .form-box {
+        position: relative;
+        background: rgba(0, 0, 0, 0.17);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(4px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        padding: 40px;
+        max-width: 600px;
+        max-height: 90vh;
+        margin: auto;
+        overflow-y: auto;
+        box-shadow: 
+            0 8px 32px 0 rgba(31, 38, 135, 0.37),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+        z-index: 1;
+        text-align: center;
+    }
+
+    .form-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 25px;
+        padding: 2px;
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.4) 0%, 
+            rgba(255, 255, 255, 0.1) 50%, 
+            rgba(255, 255, 255, 0.2) 100%);
+        -webkit-mask: 
+            linear-gradient(#fff 0 0) content-box, 
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .form-box h2 {
+        color: #ffffff;
+        margin-bottom: 30px;
+        font-size: 32px;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-box p {
+        color: #e0e8ff;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-sizing: border-box;
+        font-size: 15px;
+        background: transparent;
+        color: #ffffff;
+        transition: all 0.3s ease;
+        box-shadow: 
+            inset 0 1px 3px rgba(0, 0, 0, 0.1),
+            0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.05);
+        box-shadow: 
+            0 0 20px rgba(255, 255, 255, 0.3),
+            inset 0 1px 3px rgba(0, 0, 0, 0.1),
+            0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    select option {
+        background: #1e3c72;
+        color: white;
+    }
+
+    button {
+        padding: 14px 30px;
+        margin: 8px;
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.3), 
+            transparent);
+        transition: left 0.5s ease;
+    }
+
+    button:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 
+            0 8px 25px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4),
+            0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    button:hover::before {
+        left: 100%;
+    }
+
+    button:active {
+        transform: translateY(0);
+        box-shadow: 
+            0 2px 10px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Scrollbar styling for glass effect */
+    .form-box::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .form-box::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    .form-box::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+
+    .form-box::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+        background-clip: padding-box;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        width: auto;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+        accent-color: rgba(255, 255, 255, 0.8);
+        cursor: pointer;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    label.inline-label {
+        display: block;
+        margin-bottom: 15px;
+        color: #ffffff;
+        text-align: left;
+        padding: 12px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        background: transparent;
+    }
+
+    label.inline-label:hover {
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateX(5px);
+        box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .form-box > p {
+        text-align: left;
+        padding-left: 20px;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        font-weight: bold;
+        font-size: 17px;
+        color: #ffffff;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Animations */
+    .fade-out {
+        animation: fadeOut 0.5s forwards;
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s forwards;
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- ===================== FRAME 1 : VIDEO BACKGROUND ===================== -->
+<div id="frame1">
+    <video id="videoBackground" muted loop playsinline autoplay>
+        <source src="Nuage_numerique_bleu_.mp4" type="video/mp4">
+    </video>
+    <div class="content">
+        <button id="enterBtn">Bienvenue au Village Numérique</button>
+    </div>
+</div>
+
+<!-- ===================== FRAME 2 : WELCOME MESSAGE ===================== -->
+<div id="frame2">
+    <video class="frame-video" id="video2" muted loop playsinline autoplay>
+        <source src="Nuage_numerique_bleu_.mp4" type="video/mp4">
+    </video>
+    <h1>🏰 Bienvenue dans le Village Numérique ! 🏰</h1>
+    <p style="color: white; font-size: 20px; margin-bottom: 30px;">Préparez-vous à découvrir votre parcours gaulois...</p>
+    <button id="continueBtn">Commencer le Parcours</button>
+</div>
+
+<!-- ===================== FRAME 3 : Formulaire Entrée dans le village ===================== -->
+<div id="frame3" class="frame" data-bg="village,medieval,castle">
+    <video class="frame-video" id="video3">
+        <source src="videos\seeq1.mp4" type="video/mp4">
+    </video>
+    <div class="form-box">
+        <h2>🏘️ Entrée dans le Village</h2>
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Nom du villageois :
+            <input type="text" required>
+        </label>
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Surnom / Alias Gaulois :
+            <input type="text" required>
+        </label>
+        <p style="text-align: center; padding-left: 0;"><strong>Choisir votre compagnon :</strong></p>
+        <label class="inline-label"><input type="radio" name="compagnon" required> Idéfix 🐕</label>
+        <label class="inline-label"><input type="radio" name="compagnon"> Panoramix 🧙‍♂️</label>
+        <label class="inline-label"><input type="radio" name="compagnon"> Astérix ⚔️</label>
+        <label class="inline-label"><input type="radio" name="compagnon"> Obélix 🪨</label>
+        <br>
+        <button onclick="goBackToFrame2()">← Retour</button>
+        <button onclick="nextFrame()">Suivant</button>
+    </div>
+</div>
+
+<!-- ===================== FRAME 4 : Compétences et Talents ===================== -->
+<div id="frame4" class="frame" data-bg="potion,alchemy,magic">
+    <video class="frame-video" id="video4">
+        <source src="videos\seq2.mp4" type="video/mp4">
+    </video>
+    <div class="form-box">
+        <h2>🧪 Potion Magique – Compétences</h2>
+        <p><strong>Compétences techniques :</strong></p>
+        <label class="inline-label"><input type="checkbox"> Programmation</label>
+        <label class="inline-label"><input type="checkbox"> Gestion de projet</label>
+        <label class="inline-label"><input type="checkbox"> Design / Visualisation</label>
+        <label class="inline-label"><input type="checkbox"> IA / Data</label>
+
+        <p><strong>Niveau :</strong></p>
+        <label class="inline-label"><input type="radio" name="niveau" required> Novice gaulois</label>
+        <label class="inline-label"><input type="radio" name="niveau"> Guerrier confirmé</label>
+        <label class="inline-label"><input type="radio" name="niveau"> Druide expert</label>
+        <label class="inline-label"><input type="radio" name="niveau"> Chef du village</label>
+
+        <p><strong>Langues :</strong></p>
+        <label class="inline-label"><input type="checkbox"> Gaulois</label>
+        <label class="inline-label"><input type="checkbox"> Latin</label>
+        <label class="inline-label"><input type="checkbox"> Anglais romain</label>
+        <input type="text" placeholder="Autre...">
+
+        <p><strong>Passions :</strong></p>
+        <label class="inline-label"><input type="checkbox"> Banquets</label>
+        <label class="inline-label"><input type="checkbox"> Chasses et aventures</label>
+        <label class="inline-label"><input type="checkbox"> Arts et potions</label>
+        <label class="inline-label"><input type="checkbox"> Voyage</label>
+
+        <button onclick="prevFrame()">Précédent</button>
+        <button onclick="nextFrame()">Suivant</button>
+    </div>
+</div>
+
+<!-- ===================== FRAME 5 : Projets Personnels ===================== -->
+<div id="frame5" class="frame" data-bg="workshop,tools,craft">
+    <video class="frame-video" id="video5">
+        <source src="videos\seq3.mp4" type="video/mp4">
+    </video>
+    <div class="form-box">
+        <h2>🛠️ Atelier du Village – Vos Projets</h2>
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Nom du projet :
+            <input type="text" required>
+        </label>
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Description :
+            <textarea rows="4" required></textarea>
+        </label>
+        <p><strong>Type de projet :</strong></p>
+        <label class="inline-label"><input type="checkbox"> Projet technique</label>
+        <label class="inline-label"><input type="checkbox"> Projet artistique</label>
+        <label class="inline-label"><input type="checkbox"> Projet social</label>
+        <label class="inline-label"><input type="checkbox"> Projet scientifique</label>
+
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Lien / fichier :
+            <input type="text" placeholder="URL...">
+            <input type="file">
+        </label>
+
+        <button onclick="prevFrame()">Précédent</button>
+        <button onclick="nextFrame()">Suivant</button>
+    </div>
+</div>
+
+<!-- ===================== FRAME 6 : Trouver un Collaborateur ===================== -->
+<div id="frame6" class="frame" data-bg="market,people,collaboration">
+    <video class="frame-video" id="video6">
+        <source src="videos\seq4.mp4" type="video/mp4">
+    </video>
+    <div class="form-box">
+        <h2>🤝 Place du Marché – Collaborateurs</h2>
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Objectif :
+            <input type="text" required>
+        </label>
+        <p><strong>Compétences recherchées :</strong></p>
+        <label class="inline-label"><input type="checkbox"> Guerrier (technique)</label>
+        <label class="inline-label"><input type="checkbox"> Druide (scientifique)</label>
+        <label class="inline-label"><input type="checkbox"> Barde (créatif)</label>
+        <label class="inline-label"><input type="checkbox"> Voyageur (communication)</label>
+
+        <p><strong>Disponibilité :</strong></p>
+        <label class="inline-label"><input type="radio" name="dispo" required> Courte aventure</label>
+        <label class="inline-label"><input type="radio" name="dispo"> Long périple</label>
+
+        <p><strong>Langue obligatoire :</strong></p>
+        <label class="inline-label"><input type="checkbox"> Gaulois</label>
+        <label class="inline-label"><input type="checkbox"> Latin</label>
+        <label class="inline-label"><input type="checkbox"> Anglais</label>
+
+        <button onclick="prevFrame()">Précédent</button>
+        <button onclick="nextFrame()">Suivant</button>
+    </div>
+</div>
+
+<!-- ===================== FRAME 7 : Carte / Nuage des Talents ===================== -->
+<div id="frame7" class="frame" data-bg="clouds,sky,nature">
+    <video class="frame-video" id="video7">
+        <source src="videos\seq5.mp4" type="video/mp4">
+    </video>
+    <div class="form-box">
+        <h2>☁️ Nuage des Talents – Panoramix</h2>
+        <p><strong>Compétences clés :</strong></p>
+        <label class="inline-label"><input type="checkbox"> Force</label>
+        <label class="inline-label"><input type="checkbox"> Intelligence</label>
+        <label class="inline-label"><input type="checkbox"> Créativité</label>
+
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Ajouter des compétences bonus :
+            <input type="text" placeholder="Compétence...">
+        </label>
+
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Icône :
+            <select>
+                <option>Épée</option>
+                <option>Potion</option>
+                <option>Livre</option>
+                <option>Bouclier</option>
+            </select>
+        </label>
+
+        <button onclick="prevFrame()">Précédent</button>
+        <button onclick="nextFrame()">Suivant</button>
+    </div>
+</div>
+
+<!-- ===================== FRAME 8 : Badge Talent Verified ===================== -->
+<div id="frame8" class="frame" data-bg="certificate,badge,achievement">
+    <video class="frame-video" id="video8">
+        <source src="videos/seq5.mp4" type="video/mp4">
+    </video>
+    <div class="form-box">
+        <h2>✅ Certification du Druide</h2>
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Responsable :
+            <input type="text" required>
+        </label>
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Email :
+            <input type="email" required>
+        </label>
+        <p><strong>Validation :</strong></p>
+        <label class="inline-label"><input type="radio" name="val" required> Talent Validé</label>
+        <label class="inline-label"><input type="radio" name="val"> À renforcer</label>
+
+        <label class="inline-label" style="text-align: center; padding-left: 0;">Commentaire :
+            <textarea rows="3"></textarea>
+        </label>
+
+        <button onclick="prevFrame()">Précédent</button>
+        <button onclick="nextFrame()">Suivant</button>
+    </div>
+</div>
+
+<!-- ===================== FRAME 9 : Bonus Ludique ===================== -->
+<div id="frame9" class="frame" data-bg="treasure,gold,reward">
+    <video class="frame-video" id="video9">
+        <source src="Nuage_numerique_bleu_.mp4" type="video/mp4" muted loop playsinline autoplay>
+    </video>
+    <div class="form-box">
+        <h2>🎮 Mini Quête Débloquée !</h2>
+        <p style="font-size: 18px; line-height: 1.8; text-align: center; padding-left: 0;">
+            Bravo ! Vous avez rempli toutes les étapes.<br>
+            Vous débloquez maintenant votre potion magique animée ✨
+        </p>
+        <div style="text-align: center; font-size: 80px; margin: 30px 0;">🧪✨</div>
+        <button onclick="prevFrame()">Précédent</button>
+        <button onclick="alert('🎉 Fin du parcours ! Merci d\'avoir participé au Village Numérique !')">Terminer</button>
+    </div>
+</div>
+
+<script>
+    let current = 1; // Start at frame 1
+    const videoElement = document.getElementById("videoBackground");
+    
+    // Store all video elements
+    const videos = {
+        1: document.getElementById("videoBackground"),
+        //2: document.getElementById("video2"),
+        3: document.getElementById("video3"),
+        4: document.getElementById("video4"),
+        5: document.getElementById("video5"),
+        6: document.getElementById("video6"),
+        7: document.getElementById("video7"),
+        8: document.getElementById("video8"),
+        9: document.getElementById("video9")
+    };
+
+    // Pause and reset all videos except the current one
+    function pauseAllVideosExcept(currentFrameNum) {
+        Object.keys(videos).forEach(key => {
+            if (parseInt(key) !== currentFrameNum && videos[key]) {
+                videos[key].pause();
+                videos[key].currentTime = 0;
+            }
+        });
+    }
+
+    // Set unique background for each frame on load
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.frame[data-bg]').forEach(frame => {
+            const keywords = frame.getAttribute('data-bg');
+            const bgElement = document.createElement('div');
+            bgElement.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url('https://source.unsplash.com/random/1920x1080/?${keywords}');
+                background-size: cover;
+                background-position: center;
+                filter: blur(12px) brightness(0.5);
+                z-index: -2;
+            `;
+            frame.insertBefore(bgElement, frame.firstChild);
+        });
+    });
+
+    // Frame 1 -> Frame 2 (Play video and transition)
+    document.getElementById("enterBtn").addEventListener("click", function() {
+        // Start playing the video
+        if (videos[1]) videos[1].play();
+        
+        // Wait a moment then transition
+        setTimeout(() => {
+            document.getElementById("frame1").classList.add("fade-out");
+            setTimeout(() => {
+                document.getElementById("frame1").style.display = "none";
+                document.getElementById("frame2").style.display = "flex";
+                document.getElementById("frame2").classList.add("fade-in");
+                current = 2;
+                pauseAllVideosExcept(2);
+                if (videos[2]) videos[2].play();
+            }, 500);
+        }, 300);
+    });
+
+    // Frame 2 -> Frame 3 (start forms)
+    document.getElementById("continueBtn").addEventListener("click", function() {
+        if (videos[2]) videos[2].play();
+        
+        setTimeout(() => {
+            document.getElementById("frame2").classList.add("fade-out");
+            setTimeout(() => {
+                document.getElementById("frame2").style.display = "none";
+                document.getElementById("frame3").classList.add("active");
+                current = 3;
+                pauseAllVideosExcept(3);
+                if (videos[3]) videos[3].play();
+            }, 500);
+        }, 300);
+    });
+
+    // Frame 2 -> Back to Frame 1
+    document.getElementById("backToFrame1Btn").addEventListener("click", function() {
+        document.getElementById("frame2").classList.add("fade-out");
+        setTimeout(() => {
+            document.getElementById("frame2").style.display = "none";
+            document.getElementById("frame1").style.display = "flex";
+            document.getElementById("frame1").classList.remove("fade-out");
+            current = 1;
+            pauseAllVideosExcept(1);
+        }, 500);
+    });
+
+    // Navigation functions for forms
+    function nextFrame() {
+        const currentFrameEl = document.getElementById("frame" + current);
+
+        // Validate required fields
+        const inputs = currentFrameEl.querySelectorAll("[required]");
+        for(let input of inputs) {
+            if((input.type === "radio" || input.type === "checkbox") && !currentFrameEl.querySelector('input[name="'+input.name+'"]:checked')) {
+                alert("Veuillez remplir tous les champs requis !");
+                return;
+            } else if(input.value === "" && input.type !== "radio" && input.type !== "checkbox") {
+                alert("Veuillez remplir tous les champs requis !");
+                return;
+            }
+        }
+
+        // Play current video before transitioning
+        if (videos[current]) videos[current].play();
+        
+        setTimeout(() => {
+            currentFrameEl.classList.remove("active");
+            current++;
+            const nextFrameEl = document.getElementById("frame" + current);
+            if(nextFrameEl) {
+                nextFrameEl.classList.add("active");
+                pauseAllVideosExcept(current);
+                if (videos[current]) videos[current].play();
+            } else {
+                alert("🎉 Vous avez terminé le parcours !");
+            }
+        }, 300);
+    }
+
+    function prevFrame() {
+        const currentFrameEl = document.getElementById("frame" + current);
+        currentFrameEl.classList.remove("active");
+        current--;
+        
+        // If going back to frame 2 or 1, use special handling
+        if(current === 2) {
+            document.getElementById("frame2").style.display = "flex";
+            document.getElementById("frame2").classList.add("fade-in");
+            pauseAllVideosExcept(2);
+        } else if(current === 1) {
+            document.getElementById("frame1").style.display = "flex";
+            document.getElementById("frame1").classList.remove("fade-out");
+            pauseAllVideosExcept(1);
+        } else {
+            const prevFrameEl = document.getElementById("frame" + current);
+            if(prevFrameEl) {
+                prevFrameEl.classList.add("active");
+                pauseAllVideosExcept(current);
+            }
+        }
+    }
+
+    function goBackToFrame2() {
+        const currentFrameEl = document.getElementById("frame" + current);
+        currentFrameEl.classList.remove("active");
+        
+        // Hide frame1 if it's visible
+        if(document.getElementById("frame1").style.display === "flex") {
+            document.getElementById("frame1").style.display = "none";
+        }
+        
+        document.getElementById("frame2").style.display = "flex";
+        document.getElementById("frame2").classList.remove("fade-out");
+        document.getElementById("frame2").classList.add("fade-in");
+        current = 2;
+        pauseAllVideosExcept(2);
+    }
+
+    function goToFrame(frameNumber) {
+        // Hide all frames first
+        for(let i = 1; i <= 9; i++) {
+            const frame = document.getElementById("frame" + i);
+            if(frame) {
+                if(i <= 2) {
+                    frame.style.display = "none";
+                    frame.classList.remove("fade-in", "fade-out");
+                } else {
+                    frame.classList.remove("active");
+                }
+            }
+        }
+        
+        // Show target frame
+        const targetFrame = document.getElementById("frame" + frameNumber);
+        if(frameNumber <= 2) {
+            targetFrame.style.display = "flex";
+            targetFrame.classList.add("fade-in");
+        } else {
+            targetFrame.classList.add("active");
+        }
+        current = frameNumber;
+        pauseAllVideosExcept(frameNumber);
+    }
+</script>
+
+</body>
+</html>
